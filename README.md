@@ -5,12 +5,9 @@ Background based on Django！
 
 欢迎交流：
 
-@ 邮箱：kurolz@163.com
+@ 邮箱：18910027984@163.com
 
-@ QQ：526653382
-
-@ 个人博客： [http://www.mykurol.com](http://www.mykurol.com)  
-
+@ QQ：921129732
 
 架构：Python+Django+bootstrap+SaltStack+Zabbix+MySQL
 
