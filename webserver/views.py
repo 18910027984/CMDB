@@ -14,9 +14,9 @@ from .models import hostinfo
 from django.http import JsonResponse
 from django.core import serializers
 from .models import monitorMemory
-#import urllib.request, urllib.parse, urllib.request
 import urllib
-#import salt.client
+import salt
+import commands
 import time
 import socket
 import platform
@@ -290,10 +290,10 @@ def getHostInfo():
     tgt = "*"
     ### 获取grains，disk信息 ###
     # grains = local.cmd(tgt,"grains.items") # api
-    (status, grains_return) = subprocess.getstatusoutput(" ssh 127.0.0.1 'salt \"*\" --out raw grains.items' ")
+    (status, grains_return) = commands.getstatusoutput(" ssh 127.0.0.1 'salt \"*\" --out raw grains.items' ")
     grains = eval(grains_return.replace('}}\n{', '},'))
     # diskusage = local.cmd(tgt,"disk.usage") # api
-    (status, diskusage) = subprocess.getstatusoutput(" ssh 127.0.0.1 'salt \"*\" --out raw disk.usage' ")
+    (status, diskusage) = commands.getstatusoutput(" ssh 127.0.0.1 'salt \"*\" --out raw disk.usage' ")
     diskusage = eval(diskusage.replace('}}\n{', '},'))
     for i in grains.keys():
         try:
@@ -403,11 +403,11 @@ def hostAdmin(request):
         if command != '':
             if '"' in command:
                 command = command.replace('"', "'")
-            (status, result) = subprocess.getstatusoutput(
+            (status, result) = commands.getstatusoutput(
                 " ssh 127.0.0.1 'salt \"" + cmd_host + "\" " + funlist + " \" " + command + " \" ' ")
             # result = local.cmd(cmd_host, funlist, [command])  # api
         else:
-            (status, result) = subprocess.getstatusoutput(
+            (status, result) = commands.getstatusoutput(
                 " ssh 127.0.0.1 'salt \"" + cmd_host + "\" " + funlist + " ' ")
             # result = local.cmd(cmd_host, funlist) # api
         result_dict = {
@@ -717,9 +717,10 @@ def serverAdd(request):
                                 echo '  tty: True'>> /etc/salt/roster && \
                                 echo '  timeout: 10'>> /etc/salt/roster")
                     os.system("salt-ssh '" + ip + "' -ir 'easy_install certifi'") # 安装cretifi模块
-                    (status_gethostname, resultgethostname) = subprocess.getstatusoutput("salt-ssh -ir '" + ip + "' 'hostname'") # 获取hostname
-                    os.system("salt-ssh '" + ip + "' -ir 'echo ''" + ip + "' '" + resultgethostname+"''>> /etc/hosts'") # 添加hosts
-                    (status, result) = subprocess.getstatusoutput("salt-ssh -i '"+ip+"' state.sls minions.install") # 执行安装命令，并返回结果
+                    (status_gethostname, resultgethostname) = commands.getstatusoutput("salt-ssh -ir '" + ip + "' 'hostname'") # 获取hostname
+                    resultgethostname = resultgethostname.split(' ')[-1]
+                    os.system("salt-ssh '" + ip + "' -ir 'echo ''" + ip + "' '" + resultgethostname + "''>> /etc/hosts'") # 添加hosts
+                    (status, result) = commands.getstatusoutput("salt-ssh -i '" + ip + "' state.sls minions.install") # 执行安装命令，并返回结果
                 except:
                     result = "注意：无法连接该主机，请检查ip和用户密码是否正确！"
             else:
