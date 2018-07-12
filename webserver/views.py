@@ -290,21 +290,23 @@ def getHostInfo():
     tgt = "*"
     ### 获取grains，disk信息 ###
     # grains = local.cmd(tgt,"grains.items") # api
-    (status, grains_return) = commands.getstatusoutput(" ssh 127.0.0.1 'salt \"*\" --out raw grains.items' ")
+    (status, grains_return) = commands.getstatusoutput("salt \"*\" --out raw grains.items")
     grains = eval(grains_return.replace('}}\n{', '},'))
     # diskusage = local.cmd(tgt,"disk.usage") # api
-    (status, diskusage) = commands.getstatusoutput(" ssh 127.0.0.1 'salt \"*\" --out raw disk.usage' ")
+    (status, diskusage) = commands.getstatusoutput("salt \"*\" --out raw disk.usage")
     diskusage = eval(diskusage.replace('}}\n{', '},'))
     for i in grains.keys():
         try:
             ###去掉127.0.0.1这个地址
             hostname = grains[i]["nodename"]
-            ip = str(grains[i]["ipv4"]).strip('[]')
-            ip = ip.replace("\'", "")
-            ip = ip.replace("127.0.0.1,", "")
-            ip = ip.replace(", 127.0.0.1", "")
-            ip = ''.join(ip.split())
-            ip = ip.replace(",", " | ")
+            #ip = str(grains[i]["ipv4"]).strip('[]')
+            #ip = ip.replace("\'", "")
+            #ip = ip.replace("127.0.0.1,", "")
+            #ip = ip.replace(", 127.0.0.1", "")
+            #ip = ''.join(ip.split())
+            #ip = ip.replace(",", " | ")
+            ip = grains[i]["ip4_interfaces"]["eth0"]
+            ip = "".join(ip)
             mem = grains[i]["mem_total"] / 1024 + 1
             num_cpu = grains[i]["num_cpus"]
             OS = grains[i]["os"] + ' ' + grains[i]["osrelease"]
