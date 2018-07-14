@@ -721,6 +721,7 @@ def serverAdd(request):
                     os.system("salt-ssh '" + ip + "' -ir 'easy_install certifi'") # 安装cretifi模块
                     (status_gethostname, resultgethostname) = commands.getstatusoutput("salt-ssh -ir '" + ip + "' 'hostname'") # 获取hostname
                     resultgethostname = resultgethostname.split(' ')[-1]
+                    os.system("salt-ssh '" + ip + "' -ir 'sudo chmod 666 /etc/hosts'")
                     os.system("salt-ssh '" + ip + "' -ir 'echo ''" + ip + "' '" + resultgethostname + "''>> /etc/hosts'") # 添加hosts
                     (status, result) = commands.getstatusoutput("salt-ssh -i '" + ip + "' state.sls minions.install") # 执行安装命令，并返回结果
                 except:
