@@ -293,8 +293,8 @@ def getHostInfo():
     (status, grains_return) = commands.getstatusoutput("salt \"*\" --out raw grains.items")
     grains = eval(grains_return.replace('}}\n{', '},'))
     # diskusage = local.cmd(tgt,"disk.usage") # api
-    (status, diskusage) = commands.getstatusoutput("salt \"*\" --out raw disk.usage")
-    diskusage = eval(diskusage.replace('}}\n{', '},'))
+    # (status, diskusage) = commands.getstatusoutput("salt \"*\" --out raw disk.usage")
+    # diskusage = eval(diskusage.replace('}}\n{', '},'))
     for i in grains.keys():
         try:
             ###去掉127.0.0.1这个地址
@@ -314,6 +314,7 @@ def getHostInfo():
             virtual1 = grains[i]["virtual"]
             status = '连接'
             #磁盘容量
+            """
             if "/" not in diskusage[i]:
                 disk_used = " "
                 disk_capacity = " "
@@ -333,7 +334,7 @@ def getHostInfo():
             else:
                 disk_data1_used = float(diskusage[i]["/data"]["1K-blocks"]) / 1048576
                 disk_data1_capacity = diskusage[i]["/data"]["capacity"]
-
+            """
                 ####获取网卡mac信息####
             # if "eth0" not in grains[i]["hwaddr_interfaces"]:
             #     eth0=" "
