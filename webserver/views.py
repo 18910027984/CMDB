@@ -432,7 +432,7 @@ def loginZabbix():
     """
     # url and url header
     # zabbix的api 地址，用户名，密码，这里修改为自己实际的参数
-    zabbix_url = "http://192.168.1.167:2056/index.php"
+    zabbix_url = "http://xxxx/index.php"
     # zabbix_header = {"Content-Type": "application/json"}
     zabbix_user = "wangxiyang"
     zabbix_pass = "xxxxx"
